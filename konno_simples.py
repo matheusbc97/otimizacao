@@ -9,7 +9,7 @@ class Acao:
         self.rentabilidades = rentabilidades
         self.rentabilidadeMedia = sum(rentabilidades) / len(rentabilidades)
 
-taxaRetornoMinimo = 3 # Menor taxa de retorno que o usuário quer
+taxaRetornoMinimo = 0.1 # Menor taxa de retorno que o usuário quer
 montanteInicial = 800 #m.addVar(800, 800, 0, vtype=GRB.INTEGER, name="montante")
 tempos = 2
 acoes = [Acao('MGLU3', [8.64, -2.41]), Acao('BIDI11', [1.3, -1.71])]
@@ -33,23 +33,6 @@ m.setObjective(sum(Yt)/2, GRB.MINIMIZE)
 Xj = [] # vetor Xj
 for index in range(len(acoes)):
     Xj.append(m.addVar(vtype=GRB.CONTINUOUS, name="x{index}"))
-"""
-
-
-A11 = acoes[0].rentabilidades[0] - acoes[0].rentabilidadeMedia
-A21 = acoes[1].rentabilidades[0] - acoes[1].rentabilidadeMedia
-m.addConstr(Yt[t] + A11 * Xj[0] + A21 * Xj[1]  >= 0, "r11")
-
-A12 = acoes[0].rentabilidades[1] - acoes[0].rentabilidadeMedia
-A22 = acoes[1].rentabilidades[1] - acoes[1].rentabilidadeMedia
-m.addConstr(Yt[t] + A12 * Xj[0] + A22 * Xj[1]  >= 0, "r12")
-
-m.addConstr(Yt[t] - (A11 * Xj[0] + A21 * Xj[1])  >= 0, "r21")
-m.addConstr(Yt[t] - (A12 * Xj[0] + A22 * Xj[1])  >= 0, "r22")
-
-#print(f"Ajt")
-
-"""
 
 # Restrição (1)
 
@@ -77,7 +60,7 @@ for t in range(tempos):
 
 
 # Restrição (3)
-somatorioRestricao3 = gp.quicksum(
+somatorioRestricao3 = sum(
     acoes[j].rentabilidadeMedia * Xj[j] for j in range(quantidadeAcoes)
 )
 
