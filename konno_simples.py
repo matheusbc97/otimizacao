@@ -72,7 +72,7 @@ for t in range(tempos):
         Ajt = acoes[j].rentabilidades[t] - acoes[j].rentabilidadeMedia
         somatorioRestricao2 += Ajt * Xj[j]
         
-    m.addConstr(Yt[t] + somatorioRestricao2  >= 0, "r2{t}")
+    m.addConstr(Yt[t] - somatorioRestricao2  >= 0, "r2{t}")
 # Fim da restrição (2))
 
 
