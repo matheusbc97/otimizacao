@@ -33,6 +33,8 @@ m.setObjective(sum(Yt)/2, GRB.MINIMIZE)
 Xj = [] # vetor Xj
 for index in range(len(acoes)):
     Xj.append(m.addVar(vtype=GRB.CONTINUOUS, name="x{index}"))
+"""
+
 
 A11 = acoes[0].rentabilidades[0] - acoes[0].rentabilidadeMedia
 A21 = acoes[1].rentabilidades[0] - acoes[1].rentabilidadeMedia
@@ -47,8 +49,8 @@ m.addConstr(Yt[t] - (A12 * Xj[0] + A22 * Xj[1])  >= 0, "r22")
 
 #print(f"Ajt")
 
-
 """
+
 # Restrição (1)
 
 for t in range(tempos):
@@ -56,9 +58,8 @@ for t in range(tempos):
 
     for j in range(quantidadeAcoes):
         Ajt = acoes[j].rentabilidades[t] - acoes[j].rentabilidadeMedia
-        print(f"Ajt {j+1}{t+1} : {Ajt}")
-        somatorioRestricao1 = gp.quicksum([somatorioRestricao1, Ajt *Xj[t]])
-
+        somatorioRestricao1 += Ajt * Xj[j]
+        
     m.addConstr(Yt[t] + somatorioRestricao1  >= 0, "r1{t}")
 # Fim da restrição (1))
 
@@ -69,12 +70,11 @@ for t in range(tempos):
 
     for j in range(quantidadeAcoes):
         Ajt = acoes[j].rentabilidades[t] - acoes[j].rentabilidadeMedia
+        somatorioRestricao2 += Ajt * Xj[j]
         
-        somatorioRestricao2 = gp.quicksum([somatorioRestricao2, Ajt *Xj[t]])
-
-    m.addConstr(Yt[t] - somatorioRestricao2  >= 0, "r2{t}")
+    m.addConstr(Yt[t] + somatorioRestricao2  >= 0, "r2{t}")
 # Fim da restrição (2))
-"""
+
 
 # Restrição (3)
 somatorioRestricao3 = gp.quicksum(
