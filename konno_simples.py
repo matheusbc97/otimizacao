@@ -4,15 +4,29 @@ from gurobipy import GRB
 m = gp.Model("mp1")
 
 class Acao:
-    def __init__(self, codigo, rentabilidades):
+    def __init__(self, codigo, valorInicial, valores):
         self.codigo = codigo
+
+        rentabilidades = []
+
+        for index in range(len(valores)):
+            valorAnterior = 0
+            valorCorrente = valores[index]
+
+            if(index == 0):
+                valorAnterior = valorInicial
+            else:
+                valorAnterior = valores[index - 1]
+
+            rentabilidades.append((valorCorrente - valorAnterior)*100/valorAnterior)
+
         self.rentabilidades = rentabilidades
         self.rentabilidadeMedia = sum(rentabilidades) / len(rentabilidades)
 
 taxaRetornoMinimo = 0.1 # Menor taxa de retorno que o usuário quer
-montanteInicial = 800 #m.addVar(800, 800, 0, vtype=GRB.INTEGER, name="montante")
+montanteInicial = 800 
 tempos = 2
-acoes = [Acao('MGLU3', [8.64, -2.41]), Acao('BIDI11', [1.3, -1.71])]
+acoes = [Acao(codigo='MGLU3', valorInicial=6.48, valores=[7.04, 6.87]), Acao(codigo='BIDI11', valorInicial=21.48, valores=[21.76, 21.48])]
 quantidadeAcoes = len(acoes)
 
 # Preechimento do vetor Yt (Y em função de t)
@@ -57,7 +71,6 @@ for t in range(tempos):
         
     m.addConstr(Yt[t] - somatorioRestricao2  >= 0, "r2{t}")
 # Fim da restrição (2))
-
 
 # Restrição (3)
 somatorioRestricao3 = sum(
