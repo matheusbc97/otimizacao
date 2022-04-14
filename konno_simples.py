@@ -9,6 +9,7 @@ from acoes import acoes
 taxaRetornoMinimo = 0.1 # Menor taxa de retorno que o usuário quer
 montanteInicial = 800 
 tempos = 2
+valorMaximoAplicadoEmUmaAcao = montanteInicial * 0.8
 # fim variaveis
 
 
@@ -85,7 +86,7 @@ for j in range(quantidadeAcoes):
 # Restrição (6)
 
 for j in range(quantidadeAcoes):
-    m.addConstr(Xj[j] <= 800, "r6{j}")
+    m.addConstr(Xj[j] <= valorMaximoAplicadoEmUmaAcao, "r6{j}")
 # Fim Restrição (6)
 
 
