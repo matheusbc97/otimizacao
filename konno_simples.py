@@ -7,9 +7,9 @@ m = gp.Model("mp1")
 
 from acoes import acoes
 taxaRetornoMinimo = 0.1 # Menor taxa de retorno que o usuário quer
-montanteInicial = 800 
-tempos = 2
-valorMaximoAplicadoEmUmaAcao = montanteInicial * 0.8
+montanteInicial = 10000 
+tempos = 12
+valorMaximoAplicadoEmUmaAcao = montanteInicial * 0.3
 # fim variaveis
 
 
@@ -97,7 +97,28 @@ m.optimize()
 print(f"Optimal objective value: {m.objVal}")
 
 for j in range(len(Xj)):
-    print(f"Solution value: X{j+1} {acoes[j].codigo}{j}={Xj[j].X}")
+    if(Xj[j].X > 0):
+        print(f"Solution value: X-{j+1} {acoes[j].codigo} j-{j}={Xj[j].X}")
 
 for j in range(len(Yt)):
-    print(f"Solution value: Y{j+1}={Yt[j].X}")
+    print(f"Solution value: Y-{j+1}={Yt[j].X}")
+
+
+import json
+  
+# Data to be written
+jsonData = []
+
+
+
+for j in range(len(Xj)):
+    if(Xj[j].X > 0):
+        dictionary = {
+            "codigo" : acoes[j].codigo,
+            "investimento" : Xj[j].X,
+            "custoInvestimento": acoes[j].custoInvestimento
+        }
+        jsonData.append(dictionary)
+
+with open("results.json", "w") as outfile:
+    json.dump(jsonData, outfile)

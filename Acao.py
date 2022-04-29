@@ -17,3 +17,4 @@ class Acao:
 
         self.rentabilidades = rentabilidades
         self.rentabilidadeMedia = sum(rentabilidades) / len(rentabilidades)
+        self.custoInvestimento = valores[len(valores)-1]
